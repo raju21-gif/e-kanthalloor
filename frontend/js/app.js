@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8045";
+const API_URL = "https://e-kanthalloor.onrender.com";
 
 const API = {
     async request(endpoint, method = "GET", body = null, auth = true) {
