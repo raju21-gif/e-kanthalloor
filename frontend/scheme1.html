@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Apply: Agricultural Subsidy - e-Panchayat</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#065f46",
+                        "primary-light": "#ecfdf5",
+                        "accent": "#b45309",
+                        "background-light": "#f8fafc",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light text-slate-900 min-h-screen flex flex-col items-center py-10 px-4">
+
+    <div class="w-full max-w-3xl space-y-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <button onclick="window.location.href='dashboard_citizen.html'"
+                class="flex items-center text-slate-500 hover:text-primary transition-colors gap-2 font-bold uppercase text-xs tracking-widest bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm hover:shadow-md">
+                <span class="material-symbols-outlined text-lg">arrow_back</span> Back to Dashboard
+            </button>
+            <div class="flex items-center gap-3">
+                <div class="bg-primary p-2 rounded-xl text-white shadow-lg shadow-emerald-900/10">
+                    <span class="material-symbols-outlined">agriculture</span>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black tracking-tight text-primary uppercase leading-none">e-Panchayat</h1>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Application Portal</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheme Info Card -->
+        <div
+            class="bg-gradient-to-br from-emerald-900 to-emerald-800 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl">
+            <div class="absolute right-0 top-0 opacity-10 pointer-events-none p-4">
+                <span class="material-symbols-outlined text-9xl">spa</span>
+            </div>
+            <div class="relative z-10">
+                <span
+                    class="bg-emerald-700/50 border border-emerald-600/50 text-emerald-100 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block">Scheme
+                    #AGR-2024</span>
+                <h2 class="text-3xl font-black mb-2">Agricultural Equipment Subsidy</h2>
+                <p class="text-emerald-100/80 font-medium max-w-lg text-sm">Financial assistance for purchasing modern
+                    farming equipment. Get up to 50% subsidy on sanctioned tools.</p>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 p-8 md:p-10">
+            <form id="app-form" class="space-y-6">
+                <!-- Hidden Fields -->
+                <input type="hidden" id="scheme_id" value="scheme_001_dummy_id">
+                <input type="hidden" id="scheme_name" value="Agricultural Equipment Subsidy">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Applicant Name (Pre-filled) -->
+                    <div class="col-span-2">
+                        <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Applicant
+                            Name</label>
+                        <input type="text" id="applicant_name" required readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-500 outline-none cursor-not-allowed">
+                    </div>
+
+                    <!-- Auto-filled Personal Info -->
+                    <div>
+                        <label
+                            class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Age</label>
+                        <input type="number" id="age" readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-500 outline-none cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Phone
+                            Number</label>
+                        <input type="tel" id="phone_number" readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-500 outline-none cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Aadhaar
+                            Number</label>
+                        <input type="text" id="aadhaar_no" readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-500 outline-none cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Bank
+                            Account</label>
+                        <input type="text" id="bank_account_no" readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-500 outline-none cursor-not-allowed">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Annual
+                            Income</label>
+                        <input type="number" id="annual_income" readonly
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-500 outline-none cursor-not-allowed">
+                    </div>
+
+                    <!-- Scheme Specific Fields (Hidden/Mocked for AI Automation) -->
+                    <!-- Farm Details removed as per user request for auto-processing -->
+                </div>
+
+                <div class="pt-6 border-t border-slate-100">
+                    <div id="status-message" class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl mb-6">
+                        <span
+                            class="material-symbols-outlined text-emerald-600 shrink-0 animate-pulse">settings_suggest</span>
+                        <p class="text-xs text-emerald-800 font-medium">AI Agent is analyzing your profile and preparing
+                            the application...</p>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-4">
+                        <button type="button" onclick="window.location.href='dashboard_citizen.html'"
+                            class="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-colors">Cancel</button>
+                        <button type="submit" id="submit-btn"
+                            class="bg-primary text-white font-black px-8 py-3 rounded-xl shadow-lg shadow-emerald-900/10 hover:bg-emerald-700 transition-all hover:-translate-y-1 flex items-center gap-2">
+                            Submit Application <span class="material-symbols-outlined">send</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Auth check
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'index.html';
+
+        // Main Automation Logic
+        async function runAutoApply() {
+            try {
+                // 1. Get User Basic Info
+                const user = await API.getMe();
+                document.getElementById('applicant_name').value = user.full_name || "Unknown User";
+
+                // 2. Get Detailed Personal Info
+                const info = await API.getMyInfo();
+                console.log("Fetched Info:", info);
+
+                if (info && info.user_id) {
+                    // Auto-fill Visuals
+                    const autoFill = (id, val) => {
+                        const el = document.getElementById(id);
+                        if (el && val) {
+                            el.value = val;
+                            el.parentElement.classList.add("relative");
+                            if (!el.parentElement.querySelector('.auto-filled-badge')) {
+                                const badge = document.createElement("span");
+                                badge.className = "auto-filled-badge absolute right-0 top-0 text-[10px] bg-indigo-50 text-indigo-600 font-bold px-2 py-0.5 rounded-bl-lg";
+                                badge.innerText = "✨ Auto-filled";
+                                el.parentElement.appendChild(badge);
+                            }
+                        }
+                    }
+
+                    // Fill Fields
+                    autoFill('age', info.age);
+                    autoFill('phone_number', info.phone_number);
+                    autoFill('aadhaar_no', info.aadhaar_no);
+                    autoFill('bank_account_no', info.bank_account_no);
+                    autoFill('annual_income', info.annual_income);
+
+                    // 3. Initiate Auto-Submission
+                    const statusMsg = document.querySelector('#status-message p');
+                    statusMsg.innerText = "Details matched! Submitting application automatically...";
+
+                    // Trigger submit ONLY after data is loaded
+                    setTimeout(() => {
+                        document.getElementById('submit-btn').click();
+                    }, 1500);
+
+                } else {
+                    // If no info, redirect to details page instead of submitting empty form
+                    alert("Profile incomplete. Please go to 'My Details' first to enable Auto-fill.");
+                    window.location.href = 'details.html';
+                }
+
+            } catch (e) { console.error(e); }
+        }
+
+        // Start the process
+        runAutoApply();
+
+        // Handle Submit
+        const form = document.getElementById('app-form');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = 'Processing...';
+            btn.disabled = true;
+
+            const appData = {
+                scheme_id: document.getElementById('scheme_id').value,
+                scheme_name: document.getElementById('scheme_name').value,
+                applicant_name: document.getElementById('applicant_name').value,
+                user_id: "",
+                details: {
+                    // Mocked/AI-Inferred Farm Details (Hidden from user now)
+                    land_area: "2.5", // AI inferred average
+                    crop_type: "Rice", // AI inferred based on location/season
+                    equipment: "Standard Kit",
+
+                    // Validated Personal Details
+                    age: document.getElementById('age').value,
+                    phone: document.getElementById('phone_number').value,
+                    aadhaar: document.getElementById('aadhaar_no').value,
+                    bank: document.getElementById('bank_account_no').value,
+                    income: document.getElementById('annual_income').value
+                }
+            };
+
+            try {
+                const res = await API.applyScheme(appData);
+
+                // Simple Success Message
+                alert("Application Submitted Successfully! You can track its status on your dashboard.");
+
+                // Redirect to Dashboard
+                window.location.href = 'dashboard_citizen.html';
+
+            } catch (err) {
+                console.error(err);
+                alert("Submission Failed: " + (err.detail || err.message));
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+
+</html>

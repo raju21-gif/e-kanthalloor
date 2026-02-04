@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Scheme Details - e-Panchayat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#065f46", // Emerald 800
+                        "primary-light": "#ecfdf5", // Emerald 50
+                        "accent": "#b45309", // Amber 700
+                        "background-light": "#f8fafc", // Slate 50
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        /* Smooth fade in */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-background-light text-slate-900 min-h-screen flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+
+    <div class="w-full max-w-5xl space-y-8">
+        <!-- Header / Back Navigation -->
+        <div class="flex items-center justify-between">
+            <button onclick="history.back()"
+                class="flex items-center text-slate-500 hover:text-primary transition-colors gap-2 font-bold uppercase text-xs tracking-widest bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm hover:shadow-md">
+                <span class="material-symbols-outlined text-lg">arrow_back</span> Back to Dashboard
+            </button>
+            <div class="flex items-center gap-3">
+                <div class="bg-primary p-2 rounded-xl text-white shadow-lg shadow-emerald-900/10">
+                    <span class="material-symbols-outlined">account_balance</span>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black tracking-tight text-primary uppercase leading-none">e-Panchayat</h1>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Details View</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="text-center py-24">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-emerald-100 border-t-primary mx-auto mb-4">
+            </div>
+            <p class="text-slate-400 font-bold text-sm">Fetching Scheme Details...</p>
+        </div>
+
+        <div id="content" class="hidden space-y-8 fade-in">
+            <!-- Title & TTS Header -->
+            <div
+                class="bg-white p-8 md:p-10 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden">
+
+
+                <!-- Background Pattern -->
+                <div
+                    class="absolute top-0 right-0 w-64 h-64 bg-emerald-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-50 pointer-events-none">
+                </div>
+
+                <div class="relative z-0">
+                    <span
+                        class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-widest rounded-lg mb-4">Active
+                        Scheme</span>
+                    <h1 id="scheme-name"
+                        class="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-[1.1] max-w-3xl"></h1>
+                    <p id="scheme-desc" class="text-lg text-slate-600 leading-relaxed max-w-4xl font-medium"></p>
+                    <div class="mt-8 flex flex-wrap gap-2" id="scheme-tags">
+                        <!-- Categories injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- Eligibility -->
+                <div
+                    class="bg-white p-8 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 flex flex-col h-full">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="size-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <span class="material-symbols-outlined">person_check</span>
+                        </div>
+                        <h2 class="text-lg font-black text-slate-800 uppercase tracking-wide">Who Can Apply?</h2>
+                    </div>
+                    <div class="flex-1 bg-slate-50 rounded-xl p-6 border border-slate-100">
+                        <p id="scheme-eligibility" class="text-slate-600 leading-relaxed font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div
+                    class="bg-white p-8 rounded-[2rem] shadow-lg shadow-slate-200/40 border border-slate-100 flex flex-col h-full">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="size-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                            <span class="material-symbols-outlined">description</span>
+                        </div>
+                        <h2 class="text-lg font-black text-slate-800 uppercase tracking-wide">Documents Required</h2>
+                    </div>
+                    <div class="flex-1">
+                        <ul id="scheme-docs" class="space-y-3">
+                            <!-- Li items injected here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Process (Where to go) -->
+            <div class="bg-emerald-900 text-white p-10 rounded-[2rem] shadow-2xl relative overflow-hidden">
+                <div
+                    class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none">
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="material-symbols-outlined text-emerald-400 text-3xl">location_on</span>
+                        <h2 class="text-2xl font-black">How & Where to Apply</h2>
+                    </div>
+                    <div class="prose prose-invert max-w-none">
+                        <p id="scheme-process" class="text-emerald-100 text-lg leading-relaxed font-medium"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spacer for fixed bottom bar -->
+            <div class="h-24"></div>
+
+            <!-- Action Bar -->
+            <div class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 z-50">
+                <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="text-xs text-slate-500 font-bold hidden sm:block">
+                        <span class="block uppercase tracking-widest text-[10px] text-slate-400 mb-1">Helpline</span>
+                        Call <span class="text-emerald-700">1800-123-4567</span> for assistance
+                    </div>
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <button onclick="window.open('https://kerala.gov.in', '_blank')"
+                            class="flex-1 sm:flex-none border-2 border-slate-200 text-slate-600 font-bold py-3.5 px-6 rounded-xl hover:border-emerald-500 hover:text-emerald-700 transition-all uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
+                            Official Website <span class="material-symbols-outlined text-base">open_in_new</span>
+                        </button>
+                        <button id="btn-submit-enquiry" onclick="submitApplication()"
+                            class="flex-1 sm:flex-none bg-primary text-white font-black py-3.5 px-6 rounded-xl shadow-xl shadow-emerald-900/20 hover:bg-emerald-700 transition-all hover:-translate-y-1 uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
+                            Submit Application Enquiry <span class="material-symbols-outlined text-base">send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const schemeId = urlParams.get('id');
+        let currentSchemeData = null;
+
+        async function loadScheme() {
+            const loadingText = document.querySelector('#loading p');
+            if (!schemeId) {
+                document.getElementById('loading').innerHTML = '<p class="text-red-500 font-bold">Error: No Scheme Specified</p>';
+                return;
+            }
+
+            try {
+                loadingText.innerText = "Connecting to server...";
+                console.log("Fetching scheme:", schemeId);
+
+                const scheme = await API.getScheme(schemeId);
+                loadingText.innerText = "Data received. Rendering...";
+                console.log("Scheme data:", scheme);
+
+                currentSchemeData = scheme;
+
+                // Populate UI
+                document.getElementById('scheme-name').innerText = scheme.name || "Untitled Scheme";
+                document.getElementById('scheme-desc').innerText = scheme.description || "No description available.";
+                document.getElementById('scheme-eligibility').innerText = scheme.eligibility_criteria || "Contact Panchayat office for eligibility details.";
+                document.getElementById('scheme-process').innerText = scheme.application_process || "Visit the Panchayat office to apply.";
+
+                // Tags
+                const tagsContainer = document.getElementById('scheme-tags');
+                if (scheme.beneficiary_category) {
+                    const cats = Array.isArray(scheme.beneficiary_category) ? scheme.beneficiary_category : [scheme.beneficiary_category];
+                    cats.forEach(tag => {
+                        tagsContainer.innerHTML += `<span class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 uppercase border border-slate-200">${tag}</span>`;
+                    });
+                }
+
+                // Docs
+                const docsList = document.getElementById('scheme-docs');
+                if (scheme.documents_required && scheme.documents_required.length > 0) {
+                    scheme.documents_required.forEach(doc => {
+                        docsList.innerHTML += `
+                            <li class="flex items-start gap-4 p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                <span class="material-symbols-outlined text-green-600 text-xl shrink-0">check_circle</span>
+                                <span class="text-slate-700 font-bold text-sm leading-tight mt-0.5">${doc}</span>
+                            </li>`;
+                    });
+                } else {
+                    docsList.innerHTML = '<li class="text-slate-500 italic p-4 bg-slate-50 rounded-xl">No specific documents listed.</li>';
+                }
+
+                // Show content
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('content').classList.remove('hidden');
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loading').innerHTML = `
+                    <div class="text-center">
+                        <span class="material-symbols-outlined text-4xl text-red-400 mb-2">error</span>
+                        <p class="text-slate-500 font-bold">Failed to load scheme details.</p>
+                        <button onclick="location.reload()" class="mt-4 text-primary font-bold hover:underline">Try Again</button>
+                    </div>`;
+            }
+        }
+
+        // Initialize
+        loadScheme();
+
+        async function submitApplication() {
+            if (!currentSchemeData) return;
+
+            const btn = document.getElementById('btn-submit-enquiry');
+            // Check if button exists to avoid errors if ID mismatched
+            if (!btn) {
+                console.error("Submit button not found");
+                return;
+            }
+
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = `Submitting... <span class="material-symbols-outlined animate-spin text-base">refresh</span>`;
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            try {
+                // Call Backend to save application
+                const payload = {
+                    scheme_id: currentSchemeData._id,
+                    scheme_name: currentSchemeData.name,
+                    applicant_name: "Citizen",
+                    user_id: "auto",
+                    status: "Pending",
+                    details: {}
+                };
+
+                await API.request('/applications/apply', 'POST', payload);
+
+                alert("Application Enquiry Submitted Successfully! The Panchayat office will verify your details.");
+                window.location.href = 'dashboard_citizen.html';
+
+            } catch (err) {
+                console.error("Submission Error:", err);
+                alert("Failed to submit enquiry: " + err.message);
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+        }
+    </script>
+</body>
+
+</html>

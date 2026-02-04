@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Citizen Dashboard - e-Panchayat</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#065f46", // Emerald 800
+                        "primary-light": "#ecfdf5", // Emerald 50
+                        "accent": "#b45309", // Amber 700
+                        "background-light": "#f8fafc", // Slate 50
+                        "surface-white": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                font-family: 'Manrope', sans-serif;
+                @apply bg-background-light text-slate-900;
+            }
+        }
+
+        .sidebar-link {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-slate-500 font-bold hover:bg-emerald-50 hover:text-primary;
+        }
+
+        .sidebar-link.active {
+            @apply bg-primary text-white shadow-lg shadow-emerald-900/20;
+        }
+
+        .scheme-card {
+            @apply bg-white border-2 border-slate-100 rounded-3xl p-6 flex flex-col h-full hover:border-emerald-200 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-900/5;
+        }
+
+        .btn-primary {
+            @apply bg-primary text-white font-bold px-6 py-2.5 rounded-xl shadow-lg shadow-emerald-900/10 hover:bg-emerald-700 transition-all active:translate-y-0.5;
+        }
+
+        .btn-outline {
+            @apply border-2 border-slate-200 text-slate-600 font-bold px-6 py-2.5 rounded-xl hover:border-primary hover:text-primary transition-all;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            @apply bg-slate-100;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            @apply bg-emerald-200 rounded-full hover:bg-emerald-300;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden bg-background-light">
+    <!-- Header -->
+    <header
+        class="h-20 bg-white/90 backdrop-blur-md border-b border-slate-200 px-8 flex items-center justify-between z-30 sticky top-0">
+        <div class="flex items-center gap-4">
+            <div class="bg-primary p-2 rounded-xl text-white shadow-lg shadow-emerald-900/20">
+                <span class="material-symbols-outlined text-2xl">account_balance</span>
+            </div>
+            <div>
+                <h1 class="text-lg font-extrabold tracking-tight text-primary leading-none">e-Panchayat</h1>
+                <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-700/60 mt-0.5">Citizen Dashboard
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <!-- Search -->
+            <div
+                class="hidden md:flex items-center bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 w-80 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+                <span class="material-symbols-outlined text-slate-400 text-xl mr-3">search</span>
+                <input id="search-input" onkeyup="handleSearch()"
+                    class="bg-transparent border-none focus:ring-0 text-sm w-full text-slate-700 placeholder:text-slate-400 font-bold"
+                    placeholder="Search available schemes..." type="text" />
+            </div>
+
+            <!-- Language -->
+            <div class="hidden sm:flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+                <label
+                    class="cursor-pointer px-3 py-1 rounded-md has-[:checked]:bg-white has-[:checked]:text-primary has-[:checked]:shadow-sm text-[10px] font-black text-slate-500 transition-all flex items-center">
+                    EN <input checked class="hidden" name="lang" type="radio" value="en" />
+                </label>
+                <label
+                    class="cursor-pointer px-3 py-1 rounded-md has-[:checked]:bg-white has-[:checked]:text-primary has-[:checked]:shadow-sm text-[10px] font-black text-slate-500 transition-all flex items-center">
+                    മല <input class="hidden" name="lang" type="radio" value="ml" />
+                </label>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="flex items-center gap-3 pl-6 border-l border-slate-200 cursor-pointer group"
+                onclick="openProfileModal()">
+                <div class="text-right hidden sm:block">
+                    <p class="text-sm font-bold text-slate-700 group-hover:text-primary transition-colors"
+                        id="user-name-display">Loading...</p>
+                    <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest" id="user-ward-display">
+                        CITIZEN</p>
+                </div>
+                <div id="user-avatar"
+                    class="size-10 rounded-full count-balance bg-emerald-100 text-emerald-700 border-2 border-emerald-200 flex items-center justify-center font-bold text-lg shadow-sm group-hover:scale-105 transition-transform">
+                    U
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-slate-200 hidden lg:flex flex-col p-4 space-y-1">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-4 py-4">Menu</p>
+            <a class="sidebar-link active" href="#">
+                <span class="material-symbols-outlined">grid_view</span>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            <a class="sidebar-link" href="#">
+                <span class="material-symbols-outlined">plagiarism</span>
+                <span class="text-sm">Browse Schemes</span>
+            </a>
+            <a class="sidebar-link" href="#">
+                <span class="material-symbols-outlined">assignment</span>
+                <span class="text-sm">My Applications</span>
+            </a>
+            <a class="sidebar-link" href="details.html">
+                <span class="material-symbols-outlined">badge</span>
+                <span class="text-sm">My Details</span>
+            </a>
+            <a class="sidebar-link" href="index.html">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="text-sm">Home</span>
+            </a>
+
+            <div class="mt-auto">
+                <button onclick="logout()"
+                    class="sidebar-link w-full text-left text-red-500 hover:bg-red-50 hover:text-red-600">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="text-sm">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto custom-scrollbar p-8 scroll-smooth">
+            <div class="max-w-7xl mx-auto">
+                <!-- Welcome Banner -->
+                <div class="bg-emerald-900 rounded-[2rem] p-8 mb-10 text-white relative overflow-hidden shadow-2xl">
+                    <div
+                        class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+                    </div>
+                    <div
+                        class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div>
+                            <div
+                                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-800/50 border border-emerald-700/50 text-emerald-300 text-[10px] font-bold uppercase tracking-widest mb-3">
+                                <span class="relative flex h-2 w-2">
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                Live Updates
+                            </div>
+                            <h2 class="text-3xl font-black mb-2">Welcome to Citizen Services</h2>
+                            <p class="text-emerald-100/80 font-medium max-w-xl text-sm leading-relaxed">Access
+                                government welfare schemes, track your applications, and manage your certificates
+                                securely from one place.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="window.location.href='details.html'"
+                                class="bg-emerald-800 text-emerald-100 border border-emerald-700 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-emerald-700 transition-colors flex items-center gap-2">
+                                <span class="material-symbols-outlined">badge</span> My Details
+                            </button>
+                            <button onclick="window.location.href='scheme1.html'"
+                                class="bg-white text-emerald-900 px-6 py-3 rounded-xl font-bold text-sm shadow-xl hover:bg-emerald-50 transition-colors flex items-center gap-2">
+                                <span class="material-symbols-outlined">add_circle</span> Apply New
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-800">Available Schemes</h3>
+                        <p class="text-slate-500 text-sm font-bold">Schemes tailored for your profile</p>
+                    </div>
+                    <button
+                        class="bg-white border-2 border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:border-emerald-500 hover:text-emerald-700 transition-colors">
+                        <span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filter Categories
+                    </button>
+                </div>
+
+                <div id="schemes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+                    <div class="col-span-full py-12 text-center">
+                        <div
+                            class="animate-spin rounded-full h-12 w-12 border-4 border-emerald-200 border-t-primary mx-auto mb-4">
+                        </div>
+                        <p class="text-slate-400 font-bold text-sm">Loading available schemes...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div id="profile-modal"
+        class="fixed inset-0 z-50 hidden bg-emerald-900/40 backdrop-blur-sm flex justify-center items-center p-4 transition-all">
+        <div
+            class="bg-white w-full max-w-sm rounded-[2rem] shadow-2xl relative overflow-hidden animate-[modal-enter_0.3s_ease-out]">
+            <button onclick="closeProfileModal()"
+                class="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors z-10">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <div class="relative bg-emerald-50/50 pt-12 pb-6 px-6 text-center border-b border-slate-100">
+                <div id="modal-avatar"
+                    class="size-24 mx-auto bg-white rounded-full border-4 border-white shadow-xl flex items-center justify-center text-4xl font-black text-primary mb-4">
+                    U
+                </div>
+                <h3 class="text-xl font-black text-slate-800" id="profile-name">User Name</h3>
+                <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1" id="profile-role">Citizen
+                </p>
+            </div>
+
+            <div class="p-6 space-y-4">
+                <div class="flex items-center gap-4 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div class="p-2 bg-white rounded-lg shadow-sm text-slate-400">
+                        <span class="material-symbols-outlined">mail</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email</p>
+                        <p class="text-sm font-bold text-slate-700 truncate max-w-[200px]" id="profile-email">
+                            user@example.com</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div class="p-2 bg-white rounded-lg shadow-sm text-slate-400">
+                        <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ward</p>
+                        <p class="text-sm font-bold text-slate-700" id="profile-ward">Not Assigned</p>
+                    </div>
+                </div>
+
+                <button onclick="logout()"
+                    class="w-full mt-2 py-3.5 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-100 transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">logout</span> Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js?v=2"></script>
+    <script>
+        let CURRENT_USER = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+        });
+
+        async function loadDashboard() {
+            try {
+                const user = await API.getMe();
+                CURRENT_USER = user;
+
+                // Update Header
+                document.getElementById('user-name-display').innerText = user.full_name;
+                document.getElementById('user-ward-display').innerText = user.role === 'official' ? 'OFFICIAL' : (user.ward ? `WARD: ${user.ward}` : 'CITIZEN');
+
+                // Avatar
+                const initial = user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U';
+                document.getElementById('user-avatar').innerText = initial;
+                document.getElementById('modal-avatar').innerText = initial;
+
+                // Profile Modal Data
+                document.getElementById('profile-name').innerText = user.full_name;
+                document.getElementById('profile-role').innerText = user.role.toUpperCase();
+                document.getElementById('profile-email').innerText = user.email;
+                document.getElementById('profile-ward').innerText = user.ward || "Not Assigned";
+
+                // Load Schemes
+                const schemes = await API.getSchemes();
+                UI.renderSchemes(schemes, 'schemes-grid');
+
+            } catch (err) {
+                console.error("Dashboard Load Error:", err);
+                // If auth fails, redirect to home
+                if (err.message && (err.message.includes("401") || err.message.includes("Log in"))) {
+                    window.location.href = "index.html";
+                }
+            }
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.scheme-card');
+            cards.forEach(card => {
+                const title = card.querySelector('h3').innerText.toLowerCase();
+                const text = card.querySelector('p').innerText.toLowerCase();
+                if (title.includes(query) || text.includes(query)) {
+                    card.parentElement.style.display = 'block';
+                } else {
+                    card.parentElement.style.display = 'none';
+                }
+            });
+        }
+
+        function openProfileModal() {
+            const modal = document.getElementById('profile-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeProfileModal() {
+            const modal = document.getElementById('profile-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+
+        function getIconForCategory(categories) {
+            const cats = Array.isArray(categories) ? categories.join(" ").toLowerCase() : (categories || "").toLowerCase();
+            if (cats.includes("farmer") || cats.includes("agriculture")) return "agriculture";
+            if (cats.includes("student") || cats.includes("education")) return "school";
+            if (cats.includes("health") || cats.includes("medical")) return "medical_services";
+            if (cats.includes("woman") || cats.includes("women")) return "woman";
+            if (cats.includes("housing")) return "home";
+            if (cats.includes("pension") || cats.includes("elderly")) return "elderly";
+            return "article";
+        }
+
+        // Override renderSchemes for Emerald Styling
+        UI.renderSchemes = (schemes, containerId) => {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (schemes.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-16 text-center">
+                        <div class="bg-slate-50 inline-flex p-4 rounded-full mb-4 text-slate-300">
+                            <span class="material-symbols-outlined text-4xl">folder_off</span>
+                        </div>
+                        <p class="text-slate-500 font-bold">No schemes found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = schemes.map(s => `
+                <div class="group">
+                    <div class="scheme-card relative overflow-hidden bg-white hover:bg-white">
+                        <div class="flex items-start justify-between mb-6">
+                            <div class="size-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300 shadow-sm">
+                                <span class="material-symbols-outlined text-2xl">${getIconForCategory(s.beneficiary_category)}</span>
+                            </div>
+                            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-widest rounded-lg border border-emerald-100">
+                                Active
+                            </span>
+                        </div>
+
+                        <h3 class="text-lg font-black text-slate-800 mb-3 group-hover:text-primary transition-colors leading-tight line-clamp-2" title="${s.name}">${s.name}</h3>
+                        <p class="text-slate-500 text-xs font-medium leading-relaxed mb-6 line-clamp-3">${s.description}</p>
+
+                        <div class="mt-auto pt-6 border-t border-slate-50 flex items-center gap-3">
+                            <button onclick="viewSchemeDetails('${s._id}')" class="flex-1 btn-primary py-2 text-xs">View Details</button>
+                            <button class="size-10 flex items-center justify-center rounded-xl border-2 border-slate-100 text-slate-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all">
+                                <span class="material-symbols-outlined text-lg">favorite</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+        };
+
+        // --- MY APPLICATIONS LOGIC ---
+
+        function switchView(viewName) {
+            // Simple view switcher
+            const mainContent = document.querySelector('main > div'); // The max-w-7xl container
+
+            // If My Applications
+            if (viewName === 'applications') {
+                showMyApplications();
+            } else {
+                // Default Home/Dashboard
+                window.location.reload(); // Simple reload to restore default state for now
+            }
+        }
+
+        async function showMyApplications() {
+            const grid = document.getElementById('schemes-grid');
+            if (!grid) return;
+
+            // Update Title
+            document.querySelector('h3.text-2xl').innerText = "My Applications";
+            document.querySelector('p.text-slate-500.text-sm.font-bold').innerText = "Track your submission status";
+
+            grid.innerHTML = '<div class="col-span-full text-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div></div>';
+
+            try {
+                const apps = await API.getMyApplications();
+
+                if (apps.length === 0) {
+                    grid.innerHTML = `
+                        <div class="col-span-full py-16 text-center">
+                            <div class="bg-slate-50 inline-flex p-4 rounded-full mb-4 text-slate-300">
+                                <span class="material-symbols-outlined text-4xl">inbox</span>
+                            </div>
+                            <p class="text-slate-500 font-bold">You haven't applied for any schemes yet.</p>
+                            <button onclick="window.location.reload()" class="mt-4 text-primary font-bold text-sm hover:underline">Browse Schemes</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = apps.map(app => {
+                    let statusColor, icon, footer;
+
+                    if (app.status === 'Verified') {
+                        statusColor = 'bg-green-100 text-green-700 border-green-200';
+                        icon = 'check_circle';
+                        footer = `<button class="w-full bg-green-50 text-green-700 font-bold py-3 rounded-xl border border-green-100 text-xs flex items-center justify-center gap-2 cursor-default">
+                                     <span class="material-symbols-outlined">check_circle</span> Application Accepted
+                                   </button>`;
+                    } else if (app.status === 'Rejected') {
+                        statusColor = 'bg-red-100 text-red-700 border-red-200';
+                        icon = 'cancel';
+                        footer = `<button class="w-full bg-red-50 text-red-600 font-bold py-3 rounded-xl border border-red-100 text-xs flex items-center justify-center gap-2 cursor-default">
+                                     <span class="material-symbols-outlined">block</span> Application Rejected
+                                   </button>`;
+                    } else {
+                        // Pending
+                        statusColor = 'bg-yellow-50 text-yellow-700 border-yellow-100';
+                        icon = 'hourglass_empty';
+                        footer = `<button class="w-full bg-slate-50 text-slate-500 font-bold py-3 rounded-xl border border-slate-100 text-xs flex items-center justify-center gap-2 cursor-wait">
+                                     <span class="material-symbols-outlined">update</span> Processing
+                                   </button>`;
+                    }
+
+                    const date = new Date(app.submission_date).toLocaleDateString();
+
+                    return `
+                    <div class="group scheme-card relative overflow-hidden bg-white">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-black text-slate-800 text-lg mb-1">${app.scheme_name}</h4>
+                                <p class="text-xs text-slate-400 font-bold">Applied: ${date}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border flex items-center gap-1 ${statusColor}">
+                                <span class="material-symbols-outlined text-sm">${icon}</span> ${app.status}
+                            </span>
+                        </div>
+                        
+                        <div class="bg-slate-50 rounded-xl p-4 mb-4 border border-slate-100">
+                            <p class="text-[10px] uppercase font-bold text-slate-400 mb-2">Applicant Details</p>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 font-bold text-xs">
+                                    ${app.details?.applicant_details?.full_name?.charAt(0) || 'U'}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-700">${app.details?.applicant_details?.full_name || 'Unknown'}</p>
+                                    <p class="text-xs text-slate-500 font-medium">${app.details?.applicant_details?.phone_number || 'No Phone'}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto">
+                            ${footer}
+                        </div>
+                    </div>
+                    `;
+                }).join("");
+
+            } catch (err) {
+                grid.innerHTML = `<div class="col-span-full text-center text-red-500 font-bold">Failed to load applications.</div>`;
+                console.error(err);
+            }
+        }
+
+        // Bind Sidebar Link
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            if (link.innerText.includes('My Applications')) {
+                link.href = "#";
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    // update active state
+                    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    switchView('applications');
+                }
+            } else if (link.innerText.includes('Browse Schemes') || link.innerText.includes('Dashboard')) {
+                // Keep default href but add active class logic if needed, or just let reload handle it
+            }
+        });
+    </script>
+</body>
+
+</html>

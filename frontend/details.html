@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>My Details - e-Panchayat</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#065f46",
+                        "primary-light": "#ecfdf5",
+                        "accent": "#b45309",
+                        "background-light": "#f8fafc",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light text-slate-900 min-h-screen flex flex-col items-center py-10 px-4">
+
+    <div class="w-full max-w-3xl space-y-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <button onclick="window.location.href='dashboard_citizen.html'"
+                class="flex items-center text-slate-500 hover:text-primary transition-colors gap-2 font-bold uppercase text-xs tracking-widest bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm hover:shadow-md">
+                <span class="material-symbols-outlined text-lg">arrow_back</span> Back to Dashboard
+            </button>
+            <div class="flex items-center gap-3">
+                <div class="bg-primary p-2 rounded-xl text-white shadow-lg shadow-emerald-900/10">
+                    <span class="material-symbols-outlined">person_book</span>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black tracking-tight text-primary uppercase leading-none">e-Panchayat</h1>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Personal Info</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div
+            class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden relative">
+            <div class="absolute top-0 right-0 p-8 opacity-5">
+                <span class="material-symbols-outlined text-9xl">badge</span>
+            </div>
+
+            <div class="p-8 md:p-10 relative z-10">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black text-slate-900 mb-2">My Information</h2>
+                    <p class="text-slate-500 font-medium">Please provide your details for accurate scheme eligibility.
+                    </p>
+                </div>
+
+                <form id="details-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Full Name -->
+                        <div class="col-span-2">
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Full
+                                Name</label>
+                            <input type="text" id="full_name" required
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                                placeholder="As per official documents">
+                        </div>
+
+                        <!-- Age -->
+                        <div>
+                            <label
+                                class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Age</label>
+                            <input type="number" id="age" required min="1" max="120"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                                placeholder="E.g. 35">
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Phone
+                                Number</label>
+                            <input type="tel" id="phone_number" required
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                                placeholder="+91 98765 43210">
+                        </div>
+
+                        <!-- Aadhaar No -->
+                        <div>
+                            <label
+                                class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Aadhaar
+                                Number</label>
+                            <input type="text" id="aadhaar_no" required pattern="\d{12}" title="12 digit Aadhaar number"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                                placeholder="12 Digit Aadhaar No">
+                        </div>
+
+                        <!-- Bank Account -->
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Bank
+                                Account No</label>
+                            <input type="text" id="bank_account_no" required
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                                placeholder="Account Number">
+                        </div>
+
+                        <!-- Annual Income -->
+                        <div class="col-span-2">
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Annual
+                                Income (INR)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400">₹</span>
+                                <input type="number" id="annual_income" required
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                                    placeholder="0.00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-100 flex items-center justify-end gap-4">
+                        <button type="button" onclick="window.location.href='dashboard_citizen.html'"
+                            class="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-colors">Cancel</button>
+                        <button type="submit"
+                            class="bg-primary text-white font-black px-8 py-3 rounded-xl shadow-lg shadow-emerald-900/10 hover:bg-emerald-700 transition-all hover:-translate-y-1 flex items-center gap-2">
+                            Save Information <span class="material-symbols-outlined">save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Check Auth
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'index.html';
+
+        const form = document.getElementById('details-form');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Saving...';
+            btn.disabled = true;
+
+            const data = {
+                full_name: document.getElementById('full_name').value,
+                age: parseInt(document.getElementById('age').value),
+                phone_number: document.getElementById('phone_number').value,
+                aadhaar_no: document.getElementById('aadhaar_no').value,
+                bank_account_no: document.getElementById('bank_account_no').value,
+                annual_income: parseFloat(document.getElementById('annual_income').value)
+            };
+
+            try {
+                await API.submitInfo(data);
+                alert("Information saved successfully!");
+                window.location.href = 'dashboard_citizen.html';
+            } catch (err) {
+                console.error(err);
+                alert("Failed to save info. Please check your inputs.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        // Pre-fill name if available from profile
+        async function loadProfile() {
+            try {
+                const user = await API.getMe();
+                if (user.full_name) document.getElementById('full_name').value = user.full_name;
+            } catch (e) { console.error(e); }
+        }
+        loadProfile();
+    </script>
+</body>
+
+</html>
