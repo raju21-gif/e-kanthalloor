@@ -37,8 +37,9 @@ app.include_router(chat.router, prefix="/api", tags=["Chat"])
 app.include_router(info.router, prefix="/info", tags=["Info"])
 app.include_router(applications.router, prefix="/applications", tags=["Applications"])
 
-from fastapi.staticfiles import StaticFiles
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Mount Static & Frontend (Only if directories exist)
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.on_event("startup")
 async def startup_db_client():
@@ -48,5 +49,5 @@ async def startup_db_client():
 async def shutdown_db_client():
     await db.close_database_connection()
 
-# Mount Frontend - Must be last to avoid overshadowing API routes
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+if os.path.exists("../frontend"):
+    app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
