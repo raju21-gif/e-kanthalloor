@@ -38,6 +38,8 @@ app.include_router(info.router, prefix="/info", tags=["Info"])
 app.include_router(applications.router, prefix="/applications", tags=["Applications"])
 
 # Mount Static & Frontend (Only if directories exist)
+from fastapi.staticfiles import StaticFiles
+
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
